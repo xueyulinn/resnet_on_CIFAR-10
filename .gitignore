@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# CIFAR-10 dataset
+data
+
+results
