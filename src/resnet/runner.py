@@ -4,21 +4,24 @@ import torch
 from pathlib import Path
 import json
 
-if torch.cuda.is_available():
-    device = "cuda"
-elif torch.backends.mps.is_available():
-    device = "mps"
-else:
-    device = "cpu"
-print(f"current device: {device}")
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-RESULTS = ROOT / "results"
+def get_device():
+    if torch.cuda.is_available():
+        device = "cuda"
+        print(torch.cuda.get_device_name(0))
+        print(torch.version.cuda)
+    elif torch.backends.mps.is_available():
+        device = "mps"
+    else:
+        device = "cpu"
 
 
-def run():
+def run(results_path, seed, ):
+    torch.manual_seed(seed)
+
     dataloader_tr, dataloader_ts = data.load_data()
     epochs = 1
+    device = get_device()
 
     resnet = model.ResNet()
     resnet.to(device)
@@ -37,9 +40,5 @@ def run():
         history["ts_loss"].append(ts_loss)
         history["ts_error"].append(ts_error)
 
-    with open(RESULTS / "seed1.json", "w") as f:
+    with open(results_path / f"{seed}.json", "w") as f:
         json.dump(history, f)
-
-
-if __name__ == "__main__":
-    run()

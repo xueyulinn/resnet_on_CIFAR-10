@@ -20,11 +20,15 @@ def load_data(batch_size=128):
         "data", False, transform=transform_ts, download=True)
     tr_common = {
         "shuffle": True,
-        "batch_size": batch_size
+        "batch_size": batch_size,
+        "pin_memory": True if torch.cuda.is_available() else False,
+        "num_workers": 4,
     }
     ts_common = {
         "shuffle": False,
-        "batch_size": batch_size
+        "batch_size": batch_size,
+        "pin_memory": True if torch.cuda.is_available() else False,
+        "num_workers": 4,
     }
     dataloader_tr = DataLoader(data_tr, **tr_common)
     dataloader_ts = DataLoader(data_ts, **ts_common)

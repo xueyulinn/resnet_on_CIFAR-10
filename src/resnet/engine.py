@@ -7,7 +7,7 @@ def train(model, data, device, loss_fn, optimizer):
     errori = 0.0
     size = len(data.dataset)
     for X, y in data:
-        X, y = X.to(device), y.to(device)
+        X, y = X.to(device, non_blocking=True), y.to(device, non_blocking=True)
         pred = model(X)
 
         errori += (pred.argmax(1) == y).sum().item()
@@ -29,7 +29,8 @@ def test(model, data, device, loss_fn):
     size = len(data.dataset)
     for X, y in data:
         with torch.no_grad():
-            X, y = X.to(device), y.to(device)
+            X, y = X.to(device, non_blocking=True), y.to(
+                device, non_blocking=True)
             pred = model(X)
 
             errori += (pred.argmax(1) == y).sum().item()
