@@ -1,14 +1,21 @@
 from resnet import runner
 from pathlib import Path
+import json
 
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
+CONFIGS = ROOT / "configs"
 
 
 def main():
-    for seed in range(1, 3):
-        runner.run(RESULTS, seed)
+    configs = {}
+    with open(CONFIGS / "ablations.json", "r") as f:
+        configs = json.load(f)
+
+    for config in configs:
+        for seed in range(5):
+            runner.run(RESULTS, seed, config["layer"], config["n"])
 
 
 if __name__ == "__main__":
