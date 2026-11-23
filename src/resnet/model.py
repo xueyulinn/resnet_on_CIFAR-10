@@ -3,6 +3,11 @@ import torch.nn.functional as F
 
 
 class ShortCut(nn.Module):
+
+    '''
+    Option A
+    '''
+
     def __init__(self, c_in, c_out, stride):
         super().__init__()
         self.pad = c_out - c_in
@@ -15,7 +20,8 @@ class ShortCut(nn.Module):
 
 class ResBlock(nn.Module):
     '''
-    out = F(x) + shortcut(x)
+    Each block has 2 3x3 convs
+    block out = F(x) + shortcut(x)
     '''
 
     def __init__(self, c_in, c_out, stride=1):
@@ -36,21 +42,29 @@ class ResBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, class_num=10):
+    def __init__(self, n, class_num=10):
         super().__init__()
         self.resnet = nn.Sequential(
             nn.Conv2d(3, 16, 3,
                       padding=1),
             nn.BatchNorm2d(16),
             nn.ReLU(),
-            ResBlock(16, 16),
-            ResBlock(16, 32, stride=2),
-            ResBlock(32, 64, stride=2),
+            # 6n in total
+            self.make_stage(16, 16, n),
+            self.make_stage(16, 32, n, 2),
+            self.make_stage(32, 64, n, 2),
             nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
-            nn.Linear(64, 10)
+            nn.Linear(64, class_num)
         )
 
+    def make_stage(self, c_in, c_out, n, stride=1):
+        '''
+        Each stage has n blocks hence 2*n layers 
+        '''
+        blocks = [ResBlock(c_in, c_out, stride)]
+        blocks += [ResBlock(c_out, c_out, 1) for _ in range(n - 1)]
+        return nn.Sequential(*blocks)
+
     def forward(self, x):
-        logits = self.resnet(x)
-        return logits
+        return self.resnet(x)
