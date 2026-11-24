@@ -9,6 +9,12 @@ CONFIGS = ROOT / "configs"
 
 
 def main():
+    ''' 
+    TODO
+    bottleneck architecture for res block
+    multiple process training
+    validation set
+    '''
     configs = {}
     with open(CONFIGS / "ablations.json", "r") as f:
         configs = json.load(f)
