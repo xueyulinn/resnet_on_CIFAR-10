@@ -1,7 +1,10 @@
 [
-  {"layer":20, "n": 3},
-  {"layer":32, "n": 5},
-  {"layer":44, "n": 7},
-  {"layer":56, "n": 9},
-  {"layer":110, "n":18}
+  {"layer": 20,  "n": 3,  "res": true},
+  {"layer": 32,  "n": 5,  "res": true},
+  {"layer": 44,  "n": 7,  "res": true},
+  {"layer": 56,  "n": 9,  "res": true},
+  {"layer": 20,  "n": 3,  "res": false},
+  {"layer": 32,  "n": 5,  "res": false},
+  {"layer": 44,  "n": 7,  "res": false},
+  {"layer": 56,  "n": 9,  "res": false}
 ]

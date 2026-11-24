@@ -16,14 +16,14 @@ def get_device():
         device = "cpu"
 
 
-def run(results_path, seed, layer, n):
+def run(results_path, seed, layer, n, residual):
     torch.manual_seed(seed)
 
     dataloader_tr, dataloader_ts = data.load_data()
     epochs = 164
     device = get_device()
 
-    resnet = model.ResNet(n)
+    resnet = model.ResNet(n, residual=residual)
     resnet.to(device)
 
     loss_fn = F.cross_entropy
@@ -43,5 +43,5 @@ def run(results_path, seed, layer, n):
         history["ts_error"].append(ts_error)
     scheduler.step()
 
-    with open(results_path / f"{layer}_layer_seed_{seed}.json", "w") as f:
+    with open(results_path / f"{"resnet" if residual else "plain"}_{layer}_seed_{seed}.json", "w") as f:
         json.dump(history, f)

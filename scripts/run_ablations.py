@@ -21,7 +21,8 @@ def main():
 
     for config in configs:
         for seed in range(5):
-            runner.run(RESULTS, seed, config["layer"], config["n"])
+            runner.run(RESULTS, seed,
+                       config["layer"], config["n"], config["res"])
 
 
 if __name__ == "__main__":
